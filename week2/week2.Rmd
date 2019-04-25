@@ -1,8 +1,10 @@
 ---
-title: "Bayesian Rethinking: Week 2 Notes"
+title: 'Bayesian Rethinking: Week 2 Notes'
 author: "Varun Nayyar"
 date: "25/04/2019"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -260,8 +262,6 @@ O=runif(N,min=0,max=pi/2) #angle
 U=runif(N)*(D*sqrt(1+apply(cbind(sin(O)^2,cos(O)^2),1,min))-2*L) #centre
 A=cbind(U*cos(O),U*sin(O))
 B=A+2*L*cbind(cos(O),sin(O))
-plot(A,type="n",axes=F,xlim=c(0,D),ylim=c(0,D))
-
 
 
 plot(C,type="n",axes=F,xlim=c(0,D),ylim=c(0,D))
@@ -278,7 +278,7 @@ Pi Estimate from above is `r N/numbhits(A,B)`. We can see by changing how our da
 
 b. Calculate pi using the cannonball method. Report on the empirical error as a function of number of samples and explain your hypothesis.
 
-Error in a Monte Carlo sense is 1/\sqrt(N). This will be obvious from below.
+Error in a Monte Carlo sense is 1/sqrt(N). This will be obvious from below.
 
 ```{r}
 # cannonball
