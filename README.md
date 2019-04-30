@@ -7,3 +7,4 @@ The official forum page can be found at: https://ask.dsai.org.au/c/bayesian-reth
 This repo contains all the presentation code shown in class. 
 
  - [Week 1: Conditional Probability, Counting and Simulation](week1)
+ - [Week 2: Conditional Probability, Counting and Simulation](week1)
