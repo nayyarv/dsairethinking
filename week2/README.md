@@ -20,7 +20,12 @@ Under 18 Linear Regression
 
 Linear regression of the logarithm
 
+See McElreath
+
 ### Bayesian Anscombe
+
+ - [R Markdown](q4.Rmd)
+ - [pdf file](q4.pdf)
 
 Fit linear regression’s to anscombe’s quartet to get good fits (type ‘anscombe’ into R). 
 - Can you choose good prior’s and models to get good fits?
@@ -31,10 +36,13 @@ Fit linear regression’s to anscombe’s quartet to get good fits (type ‘ansc
 
 ### Bayesian Updating
 
+ - [R Markdown](q5.Rmd)
+ - [pdf file](q5.pdf)
+
 You’re on a cityrail train and you see that it’s numbered 4031. You know that the train numbering cannot exceed 10,000 due to it’s typefacing and you assume that each number is unique and in sequence.
 
 - Explain why the likelihood P(X|N) ∝ 1/N (is proportional to) for 4031 <= N < 10000.
-Using a convenient prior, plot the posterior, remembering to normalize. Report median and mean. 
+- Using a convenient prior, plot the posterior, remembering to normalize. Report median and mean. 
 - Now you’ve seen a carriage numbered 2031. Make use of Bayesian Updating to get a new posterior (this can be done by multiplying the two posteriors element wise, taking care to normalise).
 - What if the carriage number was 6031 instead? Report median and mean.
 - Now with all 3 carriage observations, what’s your estimate of the number of carriages in Sydney
