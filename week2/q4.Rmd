@@ -115,8 +115,8 @@ x = anscombe$x1
 y = anscombe$y1
 
 Nsample = 10000
-a = rnorm(Nsample, 3, 3)
-b = rnorm(Nsample, 0.5, 1)
+a = rnorm(Nsample, 3, 0.5)
+b = rnorm(Nsample, 0.5, 0.5)
 
 outval = rep(0, Nsample)
 # we assume that the datalen is much smaller
