@@ -1,3 +1,4 @@
+# Bayesian Inference Homework WK3 Q3
 Sam Low
 
 ### Question
