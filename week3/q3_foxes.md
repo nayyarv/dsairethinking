@@ -95,7 +95,7 @@ plot( NULL , xlim=c(-2,2) , ylim=c(-2,2), xlab = 'area (std)', ylab = 'weight (s
 for ( i in 1:50 ) lines( c(-2,2) , mu[i,] , col=col.alpha("black",0.4) )
 ```
 
-![](q3_foxes_files/figure-markdown_github/sim-1.png)
+![](q3_foxes_files/sim-1.png)
 
 These are weakly informative priors in that they allow some implusibly
 strong relationships but generally bound the lines to possible ranges of
@@ -119,7 +119,7 @@ mu.PI <- apply( mu , 2 , PI )
 plot(weight ~ area, data =d )
 ```
 
-![](q3_foxes_files/figure-markdown_github/plotall-1.png)
+![](q3_foxes_files/plotall-1.png)
 
 ``` r
 plot( W ~ A , data=d , col="red" )
@@ -127,7 +127,7 @@ lines( A_seq , mu.mean , lwd=2 )
 shade( mu.PI , A_seq )
 ```
 
-![](q3_foxes_files/figure-markdown_github/plotall-2.png)
+![](q3_foxes_files/plotall-2.png)
 
 ### inspect the precis output
 
@@ -237,7 +237,7 @@ groupsize:
 plot(coeftab( avgfood , groupsize ,  avgfood_n_groupsize ) , pars=c("bF","bG") )
 ```
 
-![](q3_foxes_files/figure-markdown_github/finalplot-1.png)
+![](q3_foxes_files/finalplot-1.png)
 
 ### What does it mean?
 
