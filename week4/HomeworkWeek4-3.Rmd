@@ -1,0 +1,117 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+3. Reconsider the urban fox analysis from last week's homework. Use WAIC
+or LOO based model comparison on five different models, each using weight
+as the outcome, and containing these sets of predictor variables:
+(1) avgfood + groupsize + area
+(2) avgfood + groupsize
+(3) groupsize + area
+(4) avgfood
+(5) area
+Can you explain the relative differences in WAIC scores, using the fox DAG
+from last week's homework? Be sure to pay attention to the standard error
+of the score differences (dSE).
+
+
+Area model
+```{r}
+library(rethinking)
+data(foxes)
+d <- foxes
+d$W <- standardize(d$weight)
+d$A <- standardize(d$area)
+m.area <- quap(
+  alist(
+    W ~ dnorm( mu , sigma ),
+    mu <- a + bA*A,
+    a ~ dnorm(0,0.2),
+    bA ~ dnorm(0,0.5),
+    sigma ~ dexp(1)
+  ), data=d )
+precis(m.area)
+```
+
+Food only model
+```{r}
+d$F <- standardize(d$avgfood)
+m.food <- quap(
+  alist(
+    W ~ dnorm( mu , sigma ),
+    mu <- a + bF*F,
+    a ~ dnorm(0,0.2),
+    bF ~ dnorm(0,0.5),
+    sigma ~ dexp(1)
+  ), data=d )
+precis(m.food)
+```
+
+
+Food + group size model
+```{r}
+d$G <- standardize(d$groupsize)
+m.food_group <- quap(
+  alist(
+    W ~ dnorm( mu , sigma ),
+    mu <- a + bF*F + bG*G,
+    a ~ dnorm(0,0.2),
+    c(bF,bG) ~ dnorm(0,0.5),
+    sigma ~ dexp(1)
+  ), data=d )
+precis(m.food_group)
+```
+
+
+Food + group size + area model
+```{r}
+d$G <- standardize(d$groupsize)
+m.food_group_area <- quap(
+  alist(
+    W ~ dnorm( mu , sigma ),
+    mu <- a + bF*F + bG*G + bA*A,
+    a ~ dnorm(0,0.2),
+    bA ~ dnorm(0,0.5),
+    c(bF,bG) ~ dnorm(0,0.5),
+    sigma ~ dexp(1)
+  ), data=d )
+precis(m.food_group_area)
+```
+
+Group + area model
+```{r}
+d$G <- standardize(d$groupsize)
+m.group_area <- quap(
+  alist(
+    W ~ dnorm( mu , sigma ),
+    mu <- a + bG*G + bA*A,
+    a ~ dnorm(0,0.2),
+    bA ~ dnorm(0,0.5),
+    bG ~ dnorm(0,0.5),
+    sigma ~ dexp(1)
+  ), data=d )
+precis(m.group_area)
+```
+
+
+Compare model LOOs and WAICs
+```{r}
+set.seed(77)
+compare(m.area, m.food, m.food_group, m.group_area, m.food_group_area, func = LOO)
+compare(m.area, m.food, m.food_group, m.group_area, m.food_group_area, func = WAIC)
+```
+
+m.food_group_area has the best WAIC. However, the 2 parameter models seem to do just as well (dWAIC within dSE bounds).
+
+Dropping 3 parameter model and comparing remaining:
+
+```{r}
+set.seed(77)
+compare(m.area, m.food, m.food_group, m.group_area, func = LOO)
+compare(m.area, m.food, m.food_group, m.group_area, func = WAIC)
+```
+
+m.food_group and m.group_area very similar.
+m.food_group maybe better due to more direct information flow.
+1-parameter model seem to lose some predictive performance. Groupsize contains important information as expected.

@@ -1,0 +1,76 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+2. Recall the marriage, age, and happiness collider bias example from Chapter 6. Run models m6.9 and m6.10 again. Compare these two models using
+WAIC (or LOO, they will produce identical results). Which model is expected to make better predictions? Which model provides the correct causal
+inference about the influence of age on happiness? Can you explain why the
+answers to these two questions disagree?
+
+H -> M <- A
+
+```{r}
+library(rethinking)
+d <- sim_happiness( seed=1977 , N_years=1000 )
+precis(d)
+```
+
+
+Consider only adults and rescale age
+```{r}
+d2 <- d[ d$age>17 , ] # only adults 6.23
+d2$A <- ( d2$age - 18 ) / ( 65 - 18 )
+```
+
+
+COnsider the following model to infer the influence of age on happiness (note: MArriage is a collider so it'll trick us)
+```{r}
+d2$mid <- d2$married + 1 # marriage status index
+m6.9 <- quap(
+alist(
+happiness ~ dnorm( mu , sigma ), # target
+mu <- a[mid] + bA*A,
+a[mid] ~ dnorm( 0 , 1 ), # PRIOR: When A = 0, i.e. age = 18 then happiness mu = a. so a needs to cover the hapiness range (i.e. -2:2), so std(a) = 1
+bA ~ dnorm( 0 , 2 ), # PRIOR: Std = 2 ensures that the whole happiness range (i.e. -2:2 = 4) span by the strongest bA*A relationship (i.e. bA = 1) is withing 2sd e.g. 95% of mass
+sigma ~ dexp(1)
+) , data=d2 )
+precis(m6.9,depth=2)
+```
+
+The model believes that happiness in negatively associated with happiness.
+
+However, now we compare it with this other model omitting marriage status:
+```{r}
+m6.10 <- quap(
+alist(
+happiness ~ dnorm( mu , sigma ),
+mu <- a + bA*A,
+a ~ dnorm( 0 , 1 ),
+bA ~ dnorm( 0 , 2 ),
+sigma ~ dexp(1)
+) , data=d2 )
+precis(m6.10)
+```
+
+This model finds no association between happiness and age. This is a typical collider situation.
+Age association with happiness is spuios not causal.
+
+
+```{r}
+set.seed(77)
+compare(m6.9, m6.10, func = LOO)
+compare(m6.9, m6.10, func = WAIC)
+```
+
+WAIC: approximation of lppd deviance
+m6.9 is the best model FOR PREDICION. THe spurious correlation adds information and helps prediction accuracy. However, if we were interested in causality (e.g. because we want to intervene in the behaviour) we'd have to chose 6.10
+
+pWAIC: penalty term
+close to number of parameters
+
+dWAIC:
+is the difference between each model's WAIC and the best WAIC in the set.
+
+SE and dSE
+standard error of WAIC and dWAIC
